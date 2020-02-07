@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.alucardlogistics.mviapp.model.BlogPost
 import com.alucardlogistics.mviapp.model.User
+import com.alucardlogistics.mviapp.repository.Repositiry
 import com.alucardlogistics.mviapp.ui.main.state.MainStateEvent
 import com.alucardlogistics.mviapp.ui.main.state.MainStateEvent.*
 import com.alucardlogistics.mviapp.ui.main.state.MainViewState
@@ -29,10 +30,10 @@ class MainViewModel: ViewModel() {
     private fun handleStateEvent(stateEvent: MainStateEvent): LiveData<MainViewState> {
         when(stateEvent) {
             is GetBlogPostsEvent -> {
-                return AbsentLiveData.create()
+                return Repositiry.getBlogPosts()
             }
             is GetUserEvent -> {
-                return AbsentLiveData.create()
+                return Repositiry.getUser(stateEvent.userId)
             }
             is None -> {
                 return AbsentLiveData.create()
