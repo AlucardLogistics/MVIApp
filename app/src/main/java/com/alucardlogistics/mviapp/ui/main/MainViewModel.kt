@@ -6,11 +6,12 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.alucardlogistics.mviapp.model.BlogPost
 import com.alucardlogistics.mviapp.model.User
-import com.alucardlogistics.mviapp.repository.Repositiry
+import com.alucardlogistics.mviapp.repository.Repository
 import com.alucardlogistics.mviapp.ui.main.state.MainStateEvent
 import com.alucardlogistics.mviapp.ui.main.state.MainStateEvent.*
 import com.alucardlogistics.mviapp.ui.main.state.MainViewState
 import com.alucardlogistics.mviapp.util.AbsentLiveData
+import com.alucardlogistics.mviapp.util.DataState
 
 class MainViewModel: ViewModel() {
 
@@ -20,20 +21,20 @@ class MainViewModel: ViewModel() {
     val viewState: LiveData<MainViewState>
         get() = _viewState
 
-    val dataState: LiveData<MainViewState> = Transformations
+    val dataState: LiveData<DataState<MainViewState>> = Transformations
         .switchMap(_stateEvent) { stateEvent ->
             stateEvent?.let {
                 handleStateEvent(it)
             }
         }
 
-    private fun handleStateEvent(stateEvent: MainStateEvent): LiveData<MainViewState> {
+    private fun handleStateEvent(stateEvent: MainStateEvent): LiveData<DataState<MainViewState>> {
         when(stateEvent) {
             is GetBlogPostsEvent -> {
-                return Repositiry.getBlogPosts()
+                return Repository.getBlogPosts()
             }
             is GetUserEvent -> {
-                return Repositiry.getUser(stateEvent.userId)
+                return Repository.getUser(stateEvent.userId)
             }
             is None -> {
                 return AbsentLiveData.create()
